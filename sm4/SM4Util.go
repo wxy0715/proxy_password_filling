@@ -1,4 +1,4 @@
-package main
+package sm4
 
 import (
 	"bytes"

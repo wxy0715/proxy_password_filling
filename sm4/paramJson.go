@@ -1,4 +1,4 @@
-package main41
+package sm4
 
 import (
 	"encoding/json"
