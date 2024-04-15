@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/go_util.iml" filepath="$PROJECT_DIR$/.idea/go_util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/proxy_password_filling.iml" filepath="$PROJECT_DIR$/.idea/proxy_password_filling.iml" />
     </modules>
   </component>
 </project>
