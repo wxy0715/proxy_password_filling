@@ -1,0 +1,14 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\password_proxy]
+@="password_proxy"
+"URL Protocol"="D:\\wxy\\project\\go_wxy\\baoleiji\\"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\password_proxy\DefaultIcon]
+@="%SystemRoot%\system32\url.dll,0"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\password_proxy\Shell]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\password_proxy\Shell\open]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\password_proxy\Shell\open]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\password_proxy\Shell\open\command]
+@="\"D:\\wxy\\project\\go_wxy\\baoleiji\\baoleiji.exe\" \"%1\" \"%2\" \"%3\" \"%4\" \"%5\""
