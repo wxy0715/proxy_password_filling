@@ -7,10 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="java_password" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="java_password" target="1.8" />
       <module name="password" target="1.8" />
     </bytecodeTargetLevel>
   </component>
