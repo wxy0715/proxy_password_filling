@@ -10,8 +10,26 @@ import (
 )
 
 func main() {
-	// 操作注册表
-	createRegisterTable()
+	// 判断有无入参
+	if 有入参 {
+		// 根据入参调用exe程序
+	} else {
+		// 操作注册表
+		createRegisterTable()
+		// 选择文件位置
+	}
+}
+
+// 删除注册表
+func deleteRegisterTable() {
+	cmd := exec.Command("reg", "delete", "HKLM\\SOFTWARE\\Classes\\proxyPassword", "/f")
+	// 隐藏命令行窗口（仅适用于Windows平台）
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	if err := cmd.Run(); err != nil {
+		w32.MessageBox(w32.HWND(uintptr(0)), "移除旧的注册表失败:"+err.Error(), "失败", w32.MB_ICONERROR|w32.MB_ICONINFORMATION)
+	} else {
+		w32.MessageBox(w32.HWND(uintptr(0)), "移除旧的注册表成功!", "成功", w32.MB_OK|w32.MB_ICONINFORMATION)
+	}
 }
 
 // 添加注册表
@@ -54,17 +72,5 @@ func createRegisterTable() {
 		if err := os.RemoveAll("./proxyPassword.reg"); err != nil {
 			fmt.Println(err)
 		}
-	}
-}
-
-// 删除注册表
-func deleteRegisterTable() {
-	cmd := exec.Command("reg", "delete", "HKLM\\SOFTWARE\\Classes\\proxyPassword", "/f")
-	// 隐藏命令行窗口（仅适用于Windows平台）
-	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
-	if err := cmd.Run(); err != nil {
-		w32.MessageBox(w32.HWND(uintptr(0)), "移除旧的注册表失败:"+err.Error(), "失败", w32.MB_ICONERROR|w32.MB_ICONINFORMATION)
-	} else {
-		w32.MessageBox(w32.HWND(uintptr(0)), "移除旧的注册表成功!", "成功", w32.MB_OK|w32.MB_ICONINFORMATION)
 	}
 }
