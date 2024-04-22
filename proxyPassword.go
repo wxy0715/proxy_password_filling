@@ -15,7 +15,7 @@ import (
 )
 
 // 定义软件类型
-var soft = []string{"Xshell", "Xftp", "filezilla", "typora"}
+var soft = []string{"Xshell", "Xftp", "filezilla"}
 
 func main() {
 	// 定义配置文件路径
