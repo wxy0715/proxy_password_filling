@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"syscall"
@@ -19,23 +18,14 @@ var log = logrus.New()
 var soft = []string{"xshell", "xftp", "filezilla"}
 
 func main() {
-	// 获取用户目录
-	userDir, err := user.Current()
-	if err != nil {
-		errorMessage("获取用户目录失败:" + err.Error())
-		os.Exit(0)
-	}
 	// 定义配置文件路径
-	configPath := userDir.HomeDir + "\\AppData\\Roaming\\password_proxy\\password_proxy_path.ini"
-	logPath := userDir.HomeDir + "\\AppData\\Roaming\\password_proxy\\password_proxy.log"
 	exePath, err := os.Executable()
-	// 针对mac虚拟机临时处理
-	configPath = strings.Replace(exePath, "proxyPassword.exe", "password_proxy_path.ini", -1)
-	logPath = strings.Replace(exePath, "proxyPassword.exe", "password_proxy.log", -1)
 	if err != nil {
 		errorMessage("获取当前程序路径失败")
 		os.Exit(0)
 	}
+	configPath := strings.Replace(exePath, "proxyPassword.exe", "password_proxy_path.ini", -1)
+	logPath := strings.Replace(exePath, "proxyPassword.exe", "password_proxy.log", -1)
 	// 初始化日志
 	initLog(logPath)
 	if len(os.Args) == 1 {
@@ -88,6 +78,7 @@ type Param struct {
 }
 
 // 启动软件 proxyPassword://Soft=xshell&Protocol=ftp&Username=root&Password=123&Port=21&Host=127.0.0.1
+// todo 密码使用非对称加密方式
 func start(configPath string) {
 	// 获取全路径
 	var data = strings.Replace(os.Args[1], "proxypassword://", "", -1)
