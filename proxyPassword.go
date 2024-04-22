@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gonutz/w32"
+	"golang.org/x/sys/windows/registry"
 	"gopkg.in/ini.v1"
 	"net/url"
 	"os"
@@ -14,7 +15,7 @@ import (
 )
 
 // 定义软件类型
-var soft = []string{"xshell", "xftp", "filezilla"}
+var soft = []string{"Xshell", "Xftp", "filezilla", "typora"}
 
 func main() {
 	// 定义配置文件路径
@@ -54,7 +55,7 @@ func initServer(configPath string, exePath string) {
 		}
 		// 指定exe程序
 		for _, exe := range soft {
-			cfg.Section("path").Key(exe).SetValue("")
+			cfg.Section("path").Key(exe).SetValue(getExe(exe))
 			if err := cfg.SaveTo(configPath); err != nil {
 				errorMessage("无法保存INI文件: %v" + err.Error())
 				os.Exit(0)
@@ -86,12 +87,12 @@ func start(configPath string) {
 	}
 	// 创建Param结构体对象并映射查询参数
 	p := Param{
-		Soft:     values.Get("Soft"),
-		Protocol: values.Get("Protocol"),
+		Soft:     strings.Replace(values.Get("Soft"), "/", "", -1),
+		Protocol: strings.Replace(values.Get("Protocol"), "/", "", -1),
 		Username: values.Get("Username"),
 		Password: values.Get("Password"),
-		Port:     values.Get("Port"),
-		Host:     values.Get("Host"),
+		Port:     strings.Replace(values.Get("Port"), "/", "", -1),
+		Host:     strings.Replace(values.Get("Host"), "/", "", -1),
 	}
 	// 读取INI文件
 	cfg, err := ini.LoadSources(ini.LoadOptions{
@@ -225,4 +226,35 @@ func successMessage(message string) {
 // 失败提示
 func errorMessage(message string) {
 	w32.MessageBox(w32.HWND(uintptr(0)), message, "操作失败", w32.MB_ICONERROR|w32.MB_ICONINFORMATION)
+}
+
+// 获取程序的exe路径
+func getExe(soft string) string {
+	const keyPath = `SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths`
+	k, err := registry.OpenKey(registry.LOCAL_MACHINE, keyPath, registry.QUERY_VALUE|registry.ENUMERATE_SUB_KEYS)
+	if err != nil {
+		return ""
+	}
+	defer k.Close()
+	subkeys, err := k.ReadSubKeyNames(-1)
+	if err != nil {
+		return ""
+	}
+	for _, appExeName := range subkeys {
+		if !strings.Contains(strings.ToLower(appExeName), strings.ToLower(soft)) {
+			continue
+		}
+		appKeyPath := fmt.Sprintf("%s\\%s", keyPath, appExeName)
+		appK, err := registry.OpenKey(registry.LOCAL_MACHINE, appKeyPath, registry.QUERY_VALUE)
+		if err != nil {
+			continue
+		}
+		defer appK.Close()
+		appPath, _, err := appK.GetStringValue("")
+		if err != nil {
+			continue
+		}
+		return appPath
+	}
+	return ""
 }
