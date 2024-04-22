@@ -22,9 +22,28 @@ go get github.com/akavel/rsrc
 rsrc -manifest proxy_password_filling.manifest -o rsrc.syso
 ```
 
-
 ## 程序使用方法
-### xshell浏览器访问示例:
+
+### 第一步:
+
+下载proxyPassword.exe程序,然后用管理员身份运行程序
+
+![image-20240422132139355](https://wxy-md.oss-cn-shanghai.aliyuncs.com/image-20240422132139355.png)
+
+### 第二步:
+
+程序会生成exe程序同目录下生成password_proxy_path.ini配置文件,存放运行程序exe路径
+
+![image-20240422132320960](https://wxy-md.oss-cn-shanghai.aliyuncs.com/image-20240422132320960.png)
+
+### 最后一步:
+
+**xshell浏览器访问示例:**
+
 ```
 proxyPassword://Soft=xshell&Protocol=ssh&Username=root&Password=123&Port=21&Host=127.0.0.1
 ```
+
+**自动打开本地软件并且自动连接成功**
+
+![image-20240422133530412](https://wxy-md.oss-cn-shanghai.aliyuncs.com/image-20240422133530412.png)

@@ -77,7 +77,7 @@ type Param struct {
 	Host     string //主机
 }
 
-// 启动软件 proxyPassword://Soft=xshell&Protocol=ftp&Username=root&Password=123&Port=21&Host=127.0.0.1
+// 启动软件 proxyPassword://Soft=xshell&Protocol=ssh&Username=root&Password=123&Port=21&Host=127.0.0.1
 // todo 密码使用非对称加密方式
 func start(configPath string) {
 	// 获取全路径
