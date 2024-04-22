@@ -47,3 +47,10 @@ proxyPassword://Soft=xshell&Protocol=ssh&Username=root&Password=123&Port=21&Host
 **自动打开本地软件并且自动连接成功**
 
 ![image-20240422133530412](https://wxy-md.oss-cn-shanghai.aliyuncs.com/image-20240422133530412.png)
+
+## 前端对接方式
+
+```
+主要通过构建a标签打开新页面 <a href="proxyPassword://Soft=xshell&Protocol=ssh&Username=root&Password=123&Port=21&Host=127.0.0.1" />
+```
+

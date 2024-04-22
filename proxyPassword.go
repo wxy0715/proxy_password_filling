@@ -1,20 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gonutz/w32"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
 	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 )
 
-var log = logrus.New()
-
-// 定义软件 \\Mac\Home\Downloads\downloadobject\apipost_win_x64.exe
+// 定义软件类型
 var soft = []string{"xshell", "xftp", "filezilla"}
 
 func main() {
@@ -25,9 +24,6 @@ func main() {
 		os.Exit(0)
 	}
 	configPath := strings.Replace(exePath, "proxyPassword.exe", "password_proxy_path.ini", -1)
-	logPath := strings.Replace(exePath, "proxyPassword.exe", "password_proxy.log", -1)
-	// 初始化日志
-	initLog(logPath)
 	if len(os.Args) == 1 {
 		initServer(configPath, exePath)
 		return
@@ -114,24 +110,28 @@ func start(configPath string) {
 	}
 	execParam := p.Protocol + "://" + p.Username + ":" + p.Password + "@" + p.Host + ":" + p.Port
 	cmd := exec.Command(kv.Value(), execParam)
+	// 隐藏Windows平台上命令行窗口
+	if runtime.GOOS == "windows" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	}
 	if err := cmd.Run(); err != nil {
-		log.Error("启动失败:", err, execParam)
+		fmt.Println("启动失败:", err)
 	} else {
-		log.Info("启动成功!", execParam)
+		fmt.Println("启动成功!")
 	}
 }
 
 // 删除注册表
 func deleteRegisterTable() {
 	cmd := exec.Command("reg", "delete", "HKLM\\SOFTWARE\\Classes\\proxyPassword", "/f")
-	// 隐藏命令行窗口（仅适用于Windows平台）
-	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	// 隐藏Windows平台上命令行窗口
+	if runtime.GOOS == "windows" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	}
 	if err := cmd.Run(); err != nil {
-		//errorMessage("移除旧的注册表失败:" + err.Error())
-		//os.Exit(0)
-		log.Error("移除旧的注册表失败:" + err.Error())
+		fmt.Println("移除旧的注册表失败:" + err.Error())
 	} else {
-		log.Info("移除旧的注册表成功!")
+		fmt.Println("移除旧的注册表成功!")
 	}
 }
 
@@ -163,16 +163,18 @@ func createRegisterTable(exePath string) {
 		file.Close()
 		// 导入注册表
 		cmd := exec.Command("reg.exe", "import", currentPath+"\\proxyPassword.reg")
-		// 隐藏命令行窗口（仅适用于Windows平台）
-		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+		// 隐藏Windows平台上命令行窗口
+		if runtime.GOOS == "windows" {
+			cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+		}
 		if err := cmd.Run(); err != nil {
 			errorMessage("写入注册表失败:" + err.Error())
 			os.Exit(0)
 		}
 		if err := os.RemoveAll("./proxyPassword.reg"); err != nil {
-			log.Error("删除文件失败:" + err.Error())
+			fmt.Println("删除文件失败:" + err.Error())
 		}
-		log.Info("添加新注册表成功!")
+		fmt.Println("添加新注册表成功!")
 	}
 }
 
@@ -198,11 +200,9 @@ func createFileIfNotExist(configPath string) {
 		defer func(file *os.File) {
 			err := file.Close()
 			if err != nil {
-				log.Error("Error closing file: %v\n", err)
 			}
 		}(file)
 	}
-	log.Info("Directory structure and/or file already exist or created successfully.")
 }
 
 // 文件是否存在
@@ -215,17 +215,6 @@ func fileExists(file string) bool {
 		return false
 	}
 	return false
-}
-
-// 初始化日志
-func initLog(logPath string) {
-	log.Formatter = &logrus.JSONFormatter{}
-	file, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		errorMessage("Failed to open log file: " + err.Error())
-		os.Exit(0)
-	}
-	log.Out = file
 }
 
 // 成功提示
