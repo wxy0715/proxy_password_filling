@@ -9,6 +9,7 @@
 ### 第二步:
 
 程序会生成exe程序同目录下生成password_proxy_path.ini配置文件,存放运行程序exe路径
+该程序会自动查询注册表里面的程序路径,默认为空需要手动配置
 
 ![image-20240422132320960](https://wxy-md.oss-cn-shanghai.aliyuncs.com/image-20240422132320960.png)
 
